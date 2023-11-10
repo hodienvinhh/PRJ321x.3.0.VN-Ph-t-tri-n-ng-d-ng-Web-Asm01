@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Quản trị</title>
+  <link th:href="@{https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css}" rel="stylesheet" />
+  <link th:href="@{/admin1/assets/css/styles.css}" rel="stylesheet" />
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js}"
+          crossorigin="anonymous"></script>
+  <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js}"
+          crossorigin="anonymous"></script>
+  <script th:src="@{/admin1/assets/js/scripts.js}"></script>
+  <script th:src="@{https://cdn.jsdelivr.net/npm/simple-datatables@latest}" crossorigin="anonymous"></script>
+
+  <script th:src="@{/admin1/assets/js/datatables-simple-demo.js}"></script>
+
+  <script th:src="@{https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js}"></script>
+</head>
+
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+  <nav th:fragment="html_nav" class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="/admin/">QUẢN TRỊ</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+
+    </form>
+    <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a th:if="${session.Admin}" class="nav-link dropdown-toggle" href="/admin/logout" role="button" ><i class="fas fa-user fa-fw"></i><span> Logout</span></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Activity Log</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+</nav>
+</nav>
+
+<div id="layoutSidenav">
+  <div id="layoutSidenav_nav">
+    <div th:fragment="html_menu" id="layoutSidenav_nav">
+      <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+          <div class="sb-sidenav-menu">
+              <div class="nav">
+                  <a class="nav-link" th:href="@{account}">
+                      <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                      Quản lý người dùng
+                  </a>
+                  <a class="nav-link" th:href="@{donation}">
+                      <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                      Quản lý đợt quyên góp
+                  </a>
+              </div>
+          </div>
+
+      </nav>
+  </div>
+  </div>
+
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid px-4">
+        <h1 class="mt-4">Chi tiết đợt quyên góp</h1>
+        <div class="card mb-4">
+
+          <div class="card-body">
+            <!--Detail-->
+            <div class="row">
+              <div class="col-6">
+                <label for="addname"
+                       class="col-form-label">Mã đợt quyên góp:</label>
+                 <input type="text" class="form-control"
+                        id="addname" name="code" th:value="${donation.code}" readonly="readonly">
+               </div>
+               <div class="col-6">
+                 <label for="addcost"
+                        class="col-form-label">Tên đợt quyên góp:</label>
+                 <input type="text" class="form-control"
+                        id="addcost" name="name" th:value="${donation.name}" readonly="readonly">
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-6">
+                 <label for="addname"
+                        class="col-form-label">Ngày bắt đầu:</label>
+                 <input type="date" class="form-control"
+                        id="addname" name="startDate" th:value="${#strings.toString(#dates.format(donation.startDate, 'yyyy-MM-dd'))}" readonly="readonly">
+               </div>
+               <div class="col-6">
+                 <label for="addcost"
+                        class="col-form-label">Ngày kết thúc:</label>
+                 <input type="date" class="form-control"
+                        id="addcost" name="endDate" th:value="${#strings.toString(#dates.format(donation.endDate, 'yyyy-MM-dd'))}"readonly="readonly">
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-6">
+                 <label for="addname"
+                        class="col-form-label">Tổng tiền quyên góp:</label>
+                 <input type="text" class="form-control"
+                        id="addname" name="money" th:value="${donation.money + ' VND'}" readonly="readonly">
+               </div>
+               <div class="col-6">
+                 <label for="addcost"
+                        class="col-form-label">Trạng thái:</label>
+                   <div th:switch="${donation.status}">
+                      <td th:case="0" class="table-success">
+                          <input type="text" class="form-control"
+                              id="addcost" name="end"
+                                value="Mới tạo"
+                                  readonly="readonly">
+                      </td>
+                      <td th:case="1" class="table-danger">
+                          <input type="text" class="form-control"
+                              id="addcost" name="end"
+                                 value="Đang quyên góp"
+                                 readonly="readonly">
+                      </td>
+                      <td th:case="2" class="table-danger">
+                          <input type="text" class="form-control"
+                              id="addcost" name="end"
+                                 value="Kết thúc quyên góp"
+                                 readonly="readonly">
+                      </td>
+
+                      <td th:case="3" class="table-danger">
+                          <input type="text" class="form-control"
+                               id="addcost" name="end"
+                                 value="Đóng quyên góp"
+                                 readonly="readonly">
+                      </td>
+                   </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-6">
+                 <label for="addname"
+                        class="col-form-label">Tổ chức:</label>
+                 <input type="text" class="form-control"
+                        id="addname" name="organizationName" th:value="${donation.organizationName}" readonly="readonly">
+               </div>
+               <div class="col-6">
+                 <label for="addcost"
+                        class="col-form-label">Số điện thoại:</label>
+                 <input type="text" class="form-control"
+                        id="addcost" name="phoneNumber" th:value="${donation.phoneNumber}" readonly="readonly">
+               </div>
+               <div class="col-12">
+                 <label  class="col-form-label">Nội dung:</label>
+                 <textarea type="text" name="description" th:text="${donation.description}" class="form-control" cols="50" readonly="readonly"></textarea>
+               </div>
+             </div>
+             <!--Detail-->
+<!--              Danh sach-->
+            <h3 class="mt-4">Danh sách những người quyên góp</h3>
+            <table id="datatablesSimple">
+              <thead>
+              <tr style="background-color: gray !important; padding-right: 20px">
+                <th>Họ Tên</th>
+                <th>Tiền quyên góp</th>
+                <th>Ngày quyên góp</th>
+                <th>Nội dung</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+              </thead>
+              <tfoot>
+              <tr>
+
+              </tr>
+              </tfoot>
+              <tbody>
+
+              <input type="hidden" th:value="${userDonationList.size()}" id="dodai"/>
+              <th:block th:each="list : ${userDonationList}">
+              <th>
+                <tr>
+                  <td th:text="${list.name}"></td>
+                  <td th:text="${list.money}"></td>
+                  <td th:text="${#dates.format(list.dateDonation, 'dd-MMM-yyyy')}"></td>
+                  <td th:text="${list.text}"></td>
+                  <div th:switch="${list.status}">
+                      <td th:case="0" class="table-success">Chờ xác nhận</td>
+                      <td th:case="1" class="table-danger">Đã xác nhận</td>
+                      <td th:case="2" class="table-danger">Đã hủy</td>
+                  </div>
+                  <td style="display: flex;justify-content: space-between">
+                      <form th:if="${list.status == 0}" th:action="@{/admin/update-donate(status = 1, id=${list.id}, donationId=${donation.id})}"
+                            method="post"
+                            style="margin-left: 10px;margin-top: 0px">
+                          <button type="submit" style="width: 105px" class="btn btn-success" >
+                              Submit
+                          </button>
+                      </form>
+
+                      <form th:if="${list.status == 0}" th:action="@{/admin/update-donate(status = 2, id=${list.id}, donationId=${donation.id})}"
+                            method="post"
+                            style="margin-left: 10px;margin-top: 0px">
+                          <button type="submit" style="width: 105px" class="btn btn-danger" >
+                              Cancel
+                          </button>
+                      </form>
+
+                  </td>
+              </th>
+              </th:block>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <script>
+
+      ClassicEditor.create(document.querySelector('#editor')).then(eidt => {
+        console.log("da" + eidt);
+      })
+              .catch(error => {
+                console.error(error);
+              });
+
+    </script>
+    <script>
+
+      var dodai = document.getElementById("dodai").value;
+      var a = parseInt(dodai);
+      for(var i = 1;i<=a+10;i++){
+        var name = "#editor"  + i
+        ClassicEditor.create(document.querySelector(name)).then(eidt => {
+          console.log("da" + eidt);
+        })
+                .catch(error => {
+                  console.error(error);
+                });
+      }
+
+
+    </script>
+    <footer class="py-4 bg-light mt-auto">
+      <div class="container-fluid px-4">
+
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script th:src="@{js/JQuery3.3.1.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js}"
+        crossorigin="anonymous"></script>
+<script th:src="@{js/scripts.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/simple-datatableslatest}" crossorigin="anonymous"></script>
+<script th:src="@{js/datatables-simple-demo.js}"></script>
+</body>
+
+</html>
