@@ -441,18 +441,18 @@
 
                         <ul class="pagination">
                             <li class="page-item" th:classappend="${pageNumber == 0 ? 'disabled' : ''}">
-                                <a class="page-link" th:href="@{/admin/account(page=${list.number-1})}">Previous</a>
+                                <a class="page-link" th:href="@{/admin/account(page=${list.number-1}, keyword=${keyword})}">Previous</a>
                             </li>
                             <div th:each="i : ${#numbers.sequence(0, list.totalPages - 1)}">
                                 <li class="page-item" th:classappend="${i==list.number} ? 'active': ''">
-                                    <a class="page-link" th:ac th:href="@{/admin/account(page=${i})}"
+                                    <a class="page-link" th:ac th:href="@{/admin/account(page=${i},keyword=${keyword})}"
                                        th:text="${i + 1}">
                                     </a>
                                 </li>
                             </div>
                             <li class="page-item"
                                 th:classappend="${pageNumber == list.totalPages-1 ? 'disabled' : ''}">
-                                <a class="page-link" th:href="@{/admin/account(page=${list.number+1})}">Next</a>
+                                <a class="page-link" th:href="@{/admin/account(page=${list.number+1},keyword=${keyword})}">Next</a>
                             </li>
                         </ul>
                     </div>
